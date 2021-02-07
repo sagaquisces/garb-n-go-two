@@ -1,10 +1,13 @@
+import { ProductImage } from './schemas/ProductImage';
+import { User } from './schemas/User';
+import { Product } from './schemas/Product';
 import { config, createSchema } from '@keystone-next/keystone/schema'
 import { createAuth } from '@keystone-next/auth'
-import { User } from './schemas/User';
 import 'dotenv/config'
 import {
     withItemData, statelessSessions
 } from '@keystone-next/keystone/session'
+import { insertSeedData } from './seed-data';
 
 const databaseURL = process.env.DATABASEURL || 'mongodb://localhost/keystone-garb-n-go'
 
@@ -33,10 +36,16 @@ export default withAuth(config({
     db: {
         adapter: 'mongoose',
         url: databaseURL,
-        // TODO: Add data seeding here
+        async onConnect(keystone) {
+            console.log("Connected to the db.")
+            if(process.argv.includes('--seed-data'))
+            await insertSeedData(keystone);
+        }
     },
     lists: createSchema({
         User,
+        Product,
+        ProductImage,
     }),
     ui: {
         // Show ui for people who pass test
