@@ -1,43 +1,112 @@
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import Router from 'next/router';
+import DisplayError from './ErrorMessage';
 import useForm from '../lib/useForm';
+import FormStyles from './styles/FormStyles';
+import { ALL_PRODUCTS_QUERY } from './Products';
+
+const CREATE_PRODUCT_MUTATION = gql`
+  mutation CREATE_PRODUCT_MUTATION(
+    $name: String!
+    $description: String!
+    $price: Int!
+    $image: Upload
+  ) {
+    createProduct(
+      data: {
+        name: $name
+        description: $description
+        price: $price
+        status: "AVAILABLE"
+        photo: { create: { image: $image, altText: $name } }
+      }
+    ) {
+      id
+      price
+      description
+      name
+    }
+  }
+`;
 
 export default function CreateProduct() {
   const { inputs, handleChange, resetForm, clearForm } = useForm({
+    image: '',
     name: 'Nice shoes',
     price: 34325,
     description: 'These are awesome shoes.',
   });
 
-  return (
-    <form>
-      <label htmlFor="name">
-        Name
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Name"
-          value={inputs.name}
-          onChange={handleChange}
-        />
-      </label>
-      <label htmlFor="price">
-        Price
-        <input
-          type="number"
-          id="price"
-          name="price"
-          placeholder="Price"
-          value={inputs.price}
-          onChange={handleChange}
-        />
-      </label>
+  const [createProduct, { loading, error, data }] = useMutation(
+    CREATE_PRODUCT_MUTATION,
+    {
+      variables: inputs,
+      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
+    }
+  );
 
-      <button type="button" onClick={clearForm}>
-        Clear Form
-      </button>
-      <button type="button" onClick={resetForm}>
-        Reset Form
-      </button>
-    </form>
+  console.log(createProduct);
+
+  return (
+    <FormStyles
+      onSubmit={async (e) => {
+        e.preventDefault();
+        // submit inputs to backend
+        const res = await createProduct();
+        clearForm();
+        Router.push({
+          pathname: `/product/${res.data.createProduct.id}`,
+        });
+      }}
+    >
+      <DisplayError error={error} />
+      <fieldset disabled={loading} aria-busy={loading}>
+        <label htmlFor="image">
+          Image
+          <input
+            required
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="name">
+          Name
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Name"
+            value={inputs.name}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="price">
+          Price
+          <input
+            type="number"
+            id="price"
+            name="price"
+            placeholder="Price"
+            value={inputs.price}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="description">
+          Description
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Description"
+            value={inputs.description}
+            onChange={handleChange}
+          />
+        </label>
+
+        <button type="submit">+ Add Product</button>
+      </fieldset>
+    </FormStyles>
   );
 }

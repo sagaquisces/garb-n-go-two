@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import formatMoney from './lib/formatMoney';
+import formatMoney from '../lib/formatMoney';
 import ItemStyles from './styles/ItemStyles';
 import PriceTagStyles from './styles/PriceTagStyles';
 import TitleStyles from './styles/TitleStyles';
@@ -17,7 +17,18 @@ export default function Product({ product }) {
       </TitleStyles>
       <PriceTagStyles>{formatMoney(product.price)}</PriceTagStyles>
       <p>{product.description}</p>
-      {/* add buttons to add and delete items */}
+      <div className="buttonList">
+        <Link
+          href={{
+            pathname: 'update',
+            query: {
+              id: product.id,
+            },
+          }}
+        >
+          Edit
+        </Link>
+      </div>
     </ItemStyles>
   );
 }
