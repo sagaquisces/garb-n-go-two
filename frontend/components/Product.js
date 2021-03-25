@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import formatMoney from '../lib/formatMoney';
+import AddToCart from './AddToCart';
+import DeleteProduct from './DeleteProduct';
 import ItemStyles from './styles/ItemStyles';
 import PriceTagStyles from './styles/PriceTagStyles';
 import TitleStyles from './styles/TitleStyles';
@@ -26,8 +28,10 @@ export default function Product({ product }) {
             },
           }}
         >
-          Edit
+          <button type="button">Edit</button>
         </Link>
+        <AddToCart id={product.id} />
+        <DeleteProduct product={product}>Delete</DeleteProduct>
       </div>
     </ItemStyles>
   );

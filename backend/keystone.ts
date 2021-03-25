@@ -1,3 +1,8 @@
+import { Role } from './schemas/Roles';
+import { Order } from './schemas/Order';
+import { OrderItem } from './schemas/OrderItem';
+import { extendGraphqlSchema } from './mutations/index';
+import { CartItem } from './schemas/CartItem';
 import { ProductImage } from './schemas/ProductImage';
 import { User } from './schemas/User';
 import { Product } from './schemas/Product';
@@ -8,6 +13,8 @@ import {
     withItemData, statelessSessions
 } from '@keystone-next/keystone/session'
 import { insertSeedData } from './seed-data';
+import { sendPasswordResetEmail } from './lib/mail';
+import { permissionsList } from './schemas/fields';
 
 const databaseURL = process.env.DATABASEURL || 'mongodb://localhost/keystone-garb-n-go'
 
@@ -23,6 +30,12 @@ const { withAuth } = createAuth({
     initFirstItem: {
         fields: ['name', 'email', 'password']
         // TODO: Add in initial roles
+    },
+    passwordResetLink: {
+        async sendToken(args) {
+            // send the email
+            await sendPasswordResetEmail(args.token, args.identity)
+        }
     }
 })
 
@@ -46,7 +59,12 @@ export default withAuth(config({
         User,
         Product,
         ProductImage,
+        CartItem,
+        Order,
+        OrderItem,
+        Role,
     }),
+    extendGraphqlSchema,
     ui: {
         // Show ui for people who pass test
         isAccessAllowed: ({ session }) => {
@@ -54,6 +72,6 @@ export default withAuth(config({
         },
     },
     session: withItemData(statelessSessions(sessionConfig), {
-        User: `id`
+        User: `id name email role{ ${permissionsList.join(' ')} }`
     })
 }))
