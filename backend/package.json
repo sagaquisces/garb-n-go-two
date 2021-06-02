@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "keystone-next",
+    "build": "keystone-next build",
+    "start": "keystone-next start",
     "seed-data": "keystone-next --seed-data"
   },
   "repository": {
