@@ -16,7 +16,7 @@ import { insertSeedData } from './seed-data';
 import { sendPasswordResetEmail } from './lib/mail';
 import { permissionsList } from './schemas/fields';
 
-const databaseURL = process.env.DATABASEURL || 'mongodb://localhost/keystone-garb-n-go'
+const databaseURL = process.env.DATABASE_URL || 'mongodb://localhost/keystone-garb-n-go'
 
 const sessionConfig = {
     maxAge: 60 * 60 * 24 * 360, // how long signed in?
@@ -44,7 +44,7 @@ export default withAuth(config({
         cors: {
             origin: [process.env.FRONTEND_URL],
             credentials: true,
-        }
+        },
     },
     db: {
         adapter: 'mongoose',
