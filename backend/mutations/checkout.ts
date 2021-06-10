@@ -81,8 +81,10 @@ async function checkout(
     data: {
       total: charge.amount,
       charge: charge.id,
-      items: { create: orderItems }
-    }
+      items: { create: orderItems },
+      user: { connect: { id: userId }}
+    },
+    resolveFields: false,
   })
   // clean up
   const cartItemIdsToDelete = user.cart.map(cartItem => cartItem.id);
