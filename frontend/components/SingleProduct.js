@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import styled from 'styled-components';
 import DisplayError from './ErrorMessage';
+import ProductComp from './Product';
 
 const ProductStyles = styled.div`
   display: grid;
@@ -45,16 +46,20 @@ export default function SingleProduct({ id }) {
   if (error) return <DisplayError error={error} />;
   const { Product } = data;
   return (
-    <ProductStyles>
-      <Head>
-        <title>Sick Fits | {Product.name}</title>
-      </Head>
-      <img src={Product.photo.image.publicUrlTransformed} alt={Product.name} />
-      <div className="details">
-        <h2>{Product.name}</h2>
-        <p>{Product.description}</p>
-      </div>
-    </ProductStyles>
+    // <ProductStyles>
+    //   <Head>
+    //     <title>Sick Fits | {Product.name}</title>
+    //   </Head>
+    //   <img
+    //     src={Product.photo.image.publicUrlTransformed}
+    //     alt={Product.name}
+    //   />
+    //   <div className="details">
+    //     <h2>{Product.name}</h2>
+    //     <p>{Product.description}</p>
+    //   </div>
+    // </ProductStyles>
+    <ProductComp product={Product} key={Product.id} />
   );
 }
 
