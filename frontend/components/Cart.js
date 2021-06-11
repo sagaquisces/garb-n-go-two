@@ -63,6 +63,10 @@ export default function Cart() {
       </ul>
       <footer>
         <p>{formatMoney(calcTotalPrice(me.cart))}</p>
+        <span>
+          This site is for testing. Card number: 4242 4242 4242 4242. MM/YY:
+          02/22. CVC: 222. ZIP: 22222
+        </span>
         <Checkout />
       </footer>
     </CartStyles>

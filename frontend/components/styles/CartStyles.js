@@ -35,6 +35,11 @@ const CartStyles = styled.div`
     p {
       margin: 0;
     }
+    span {
+      color: red;
+      font-size: 2rem;
+      font-weight: 400;
+    }
   }
   ul {
     margin: 0;
