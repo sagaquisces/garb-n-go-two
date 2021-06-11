@@ -18,18 +18,7 @@ export default function AddToCart({ id }) {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
   });
   return (
-    <button
-      disabled={loading}
-      type="button"
-      onClick={async () => {
-        function sleep(ms) {
-          return new Promise((resolve) => setTimeout(resolve, ms));
-        }
-        await addToCart();
-        await sleep(1000);
-        openCart();
-      }}
-    >
+    <button disabled={loading} type="button" onClick={addToCart}>
       Add{loading && 'ing'} to Cart
     </button>
   );
